@@ -1,3 +1,8 @@
+// TODO: draw condition
+// TODO: time delay before computer move
+// TODO: scoreboard
+// TODO: styling
+
 $(document).ready(function () {
     console.log("Okay I'm ready");
 
@@ -29,32 +34,37 @@ $(document).ready(function () {
         // because this closure stores the reference to squares[i] and not the value itself; 
         // i disappears when the loop ends, so the ref is undefined
         this.innerHTML = "X";
-        console.log("I got clicked!" + this.id);
+        //console.log("I got clicked!" + this.id);
         playerTurns.push(this.id);
         console.log("PLayer turns so far: " + playerTurns);
         this.removeEventListener("click", clickEvent);
 
+        // no win, and at least one open space; computer can move
         if (!checkForWin() && (playerTurns.length + computerTurns.length < 9)){
             computerMove();
+        }
+
+        // no win, and no open spaces; game is a draw
+        if (!checkForWin() && (playerTurns.length + computerTurns.length === 9)){
+            console.log("DRAW!");
         }
         
     }
 
     function endGame(){
+        // remove all event listeners
         for (var i = 0; i < squares.length; i++) {
             squares[i].removeEventListener("click", clickEvent);
-            //squares[i].innerHTML = "";
         }
-        if (whoseTurn === 1){
-            console.log("YOU WIN!");
-            return true;
-        } else {
-            console.log("COMPUTER WINS!");
-            return true;
-        }
+
+        // TODO: clear the board
+        // TODO: display message, set the score
+
+
     }
 
     function checkForWin(){
+        // set array to player or computer moves
         var myArray;
         if (whoseTurn === 1){
             myArray = playerTurns;
@@ -62,15 +72,26 @@ $(document).ready(function () {
             myArray = computerTurns;
         }
         var track;
+        // compare this array to winning combinations
         for (var combo = 0; combo < winCombos.length; combo++) {
             track = 0;
             for (var win = 0; win < winCombos[combo].length; win++){
+                // if a winning move is in this array, track it
                 if (myArray.indexOf(winCombos[combo][win]) !== -1){
                     track += 1;
-                    //console.log("Winning moves so far: " + track);
+                    // if this array has a winning combination, display appropriate win message
                     if (track === 3){
-                        endGame();
-                        return true;
+                        if (whoseTurn === 1){
+                            console.log("YOU WIN!");
+                            endGame();
+                            return true;
+                        } else if (whoseTurn === 0) {
+                            console.log("COMPUTER WINS!");
+                            endGame();
+                            return true;
+                        }
+                        //endGame();
+                        //return true;
                     }
                 } else {
                     break;
