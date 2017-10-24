@@ -1,5 +1,6 @@
 // TODO: scoreboard
 // TODO: styling
+// TODO: computer strategy
 
 $(document).ready(function () {
     console.log("Okay I'm ready");
@@ -24,9 +25,11 @@ $(document).ready(function () {
                     ["top-L", "mid-M", "bottom-R"], ["top-R", "mid-M", "bottom-L"]];
 
     var whoseTurn;
+    // toggles lock from player clicks during timeout before computer move
     var lockout = false;
 
     function clickEvent(){
+        // if locked out, function does not execute
         if (lockout === true){
             return;
         }
@@ -40,32 +43,51 @@ $(document).ready(function () {
         playerTurns.push(this.id);
         console.log("PLayer turns so far: " + playerTurns);
         this.removeEventListener("click", clickEvent);
+
+        // lock the board from clicks after player's move
         lockout = true;
 
         // no win, and at least one open space; computer can move
         var wasThereAWin = checkForWin();
         if (!wasThereAWin && (playerTurns.length + computerTurns.length < 9)){
-            setTimeout(computerMove, 4000);
+            // time delay before computer move, final to be ~2000?
+            setTimeout(computerMove, 1000);
         }
 
         // no win, and no open spaces; game is a draw
         if (!wasThereAWin && (playerTurns.length + computerTurns.length === 9)){
             console.log("DRAW!");
+            endGame();
         }
         
     }
 
     function endGame(){
-        // remove all event listeners
+        // deactivate board by removing all event listeners
         for (var i = 0; i < squares.length; i++) {
             squares[i].removeEventListener("click", clickEvent);
         }
-        console.log("game ended");
+        console.log("game over");
 
-        // TODO: clear the board
+        // clear the board
+        setTimeout(clearBoard, 3000);
+
         // TODO: display message, set the score
 
+    }
 
+    function clearBoard() {
+        // clear the squares
+        for (var i = 0; i < squares.length; i++){
+            squares[i].innerHTML = "";
+        }
+
+        // clear the player and computer move logs
+        playerTurns = [];
+        computerTurns = [];
+
+        // reset the game
+        setTimeout(gamePlay, 3000);
     }
 
     function checkForWin(){
@@ -95,8 +117,6 @@ $(document).ready(function () {
                             endGame();
                             return true;
                         }
-                        //endGame();
-                        //return true;
                     }
                 } else {
                     break;
@@ -109,28 +129,44 @@ $(document).ready(function () {
     function computerMove(){
         whoseTurn = 0;
         console.log("Computer move " + whoseTurn);
+
+        // build array of open squares by checking the board against the move logs
         var openSquares = [];
         for (var i = 0; i < squares.length; i++){
             if ((playerTurns.indexOf(squares[i].id) === -1) && (computerTurns.indexOf(squares[i].id) === -1)){
                 openSquares.push(squares[i]);
             }
         }
+
+        // choose a random open square and place the O
         var move = openSquares[Math.floor(Math.random()*openSquares.length)];
         move.innerHTML = "O";
+
+        // deactivate that square
         move.removeEventListener("click", clickEvent);
+
+        // log the move
         computerTurns.push(move.id);
         console.log("Computer moves so far: " + computerTurns);
+
+        // unlock the board for the player
         lockout = false;
         
         checkForWin();
     }
+    
+    function gamePlay(){
+        console.log("game is ready to play");
+        lockout = false;
+        for (var i = 0; i < squares.length; i++) {
+            //console.log("Loop running! i is " + i);
+            //console.log(squares[i]);
+            squares[i].addEventListener("click", clickEvent);
+        } 
+        return true;
+    }
 
-    for (var i = 0; i < squares.length; i++) {
-        //console.log("Loop running! i is " + i);
-        //console.log(squares[i]);
-        squares[i].addEventListener("click", clickEvent);
-        //console.log("Just added an event listener");
-    } // squares loop
+    gamePlay();
 
 }); // document ready
 
