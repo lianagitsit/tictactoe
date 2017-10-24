@@ -1,5 +1,3 @@
-// TODO: draw condition
-// TODO: time delay before computer move
 // TODO: scoreboard
 // TODO: styling
 
@@ -26,8 +24,12 @@ $(document).ready(function () {
                     ["top-L", "mid-M", "bottom-R"], ["top-R", "mid-M", "bottom-L"]];
 
     var whoseTurn;
+    var lockout = false;
 
     function clickEvent(){
+        if (lockout === true){
+            return;
+        }
         whoseTurn = 1;
         console.log("Player turn: " + whoseTurn);
         // use 'this' to know which element to modify. if you use squares[i] you'll get a bug, 
@@ -38,14 +40,16 @@ $(document).ready(function () {
         playerTurns.push(this.id);
         console.log("PLayer turns so far: " + playerTurns);
         this.removeEventListener("click", clickEvent);
+        lockout = true;
 
         // no win, and at least one open space; computer can move
-        if (!checkForWin() && (playerTurns.length + computerTurns.length < 9)){
-            computerMove();
+        var wasThereAWin = checkForWin();
+        if (!wasThereAWin && (playerTurns.length + computerTurns.length < 9)){
+            setTimeout(computerMove, 4000);
         }
 
         // no win, and no open spaces; game is a draw
-        if (!checkForWin() && (playerTurns.length + computerTurns.length === 9)){
+        if (!wasThereAWin && (playerTurns.length + computerTurns.length === 9)){
             console.log("DRAW!");
         }
         
@@ -56,6 +60,7 @@ $(document).ready(function () {
         for (var i = 0; i < squares.length; i++) {
             squares[i].removeEventListener("click", clickEvent);
         }
+        console.log("game ended");
 
         // TODO: clear the board
         // TODO: display message, set the score
@@ -115,6 +120,7 @@ $(document).ready(function () {
         move.removeEventListener("click", clickEvent);
         computerTurns.push(move.id);
         console.log("Computer moves so far: " + computerTurns);
+        lockout = false;
         
         checkForWin();
     }
