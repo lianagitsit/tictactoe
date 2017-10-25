@@ -2,13 +2,28 @@ table, td {
     border: 1px solid black;
   }
   
-  table {
+  #board {
     width: 300px;
     height: 300px;
-    margin: 100px auto;
+    margin: 20px auto;
     table-layout: fixed;
   }
   
-  td {
+  td, #message {
+    text-align: center;
+  }
+
+  #scoreboard {
+    width: 300px;
+    margin: 20px auto;
+  }
+
+  #play-again {
+    text-decoration: underline;
+    color: blue;
+    visibility: hidden;
+  }
+
+  .wrapper {
     text-align: center;
   }

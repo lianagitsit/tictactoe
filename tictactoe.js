@@ -1,10 +1,11 @@
-// TODO: scoreboard
 // TODO: styling
 // TODO: computer strategy
+// BONUS: two players?
 
 $(document).ready(function () {
-    console.log("Okay I'm ready");
+    console.log("Document ready");
 
+    // could this be tighter with an object?
     var topL = document.getElementById("top-L");
     var topM = document.getElementById("top-M");
     var topR = document.getElementById("top-R");
@@ -25,8 +26,23 @@ $(document).ready(function () {
                     ["top-L", "mid-M", "bottom-R"], ["top-R", "mid-M", "bottom-L"]];
 
     var whoseTurn;
+
     // toggles lock from player clicks during timeout before computer move
     var lockout = false;
+
+    //initializes scoreboard
+    var playerScore = 0;
+    var compScore = 0;
+    var playerScoreBoard = document.getElementById("player-score");
+    var compScoreBoard = document.getElementById("comp-score");
+    playerScoreBoard.innerHTML = playerScore;
+    compScoreBoard.innerHTML = compScore;
+
+    // sets game end message
+    var message = document.getElementById("message");
+
+    // toggles play again button
+    var playAgain = document.getElementById("play-again");
 
     function clickEvent(){
         // if locked out, function does not execute
@@ -67,12 +83,16 @@ $(document).ready(function () {
         for (var i = 0; i < squares.length; i++) {
             squares[i].removeEventListener("click", clickEvent);
         }
-        console.log("game over");
+        console.log("match over");
 
-        // clear the board
-        setTimeout(clearBoard, 3000);
+        // do not clear the board if there has been a game win
+        if (playerScore === 3 || compScore === 3){
+            return;
+        } else {
+            // clear the board
+            setTimeout(clearBoard, 1500);
+        }
 
-        // TODO: display message, set the score
 
     }
 
@@ -87,7 +107,7 @@ $(document).ready(function () {
         computerTurns = [];
 
         // reset the game
-        setTimeout(gamePlay, 3000);
+        setTimeout(gamePlay, 500);
     }
 
     function checkForWin(){
@@ -110,10 +130,25 @@ $(document).ready(function () {
                     if (track === 3){
                         if (whoseTurn === 1){
                             console.log("YOU WIN!");
+                            // display the score for the won match
+                            playerScore += 1;
+                            playerScoreBoard.innerHTML = playerScore;                            
+                            // if player has won three matches, display message
+                            if (playerScore === 3){
+                                message.innerHTML = "GAME OVER! YOU WIN!";
+                                playAgain.style.visibility = "visible";
+                            } 
                             endGame();
                             return true;
                         } else if (whoseTurn === 0) {
                             console.log("COMPUTER WINS!");
+                            compScore += 1;
+                            compScoreBoard.innerHTML = compScore;                                    
+                            // if computer has won three matches, display message
+                            if (compScore === 3){
+                                message.innerHTML = "GAME OVER! YOU LOSE!";
+                                playAgain.style.visibility = "visible";
+                            }
                             endGame();
                             return true;
                         }
@@ -168,26 +203,4 @@ $(document).ready(function () {
 
     gamePlay();
 
-}); // document ready
-
-
-
-        
-    // old code wtf 
-    /*var track = 0;
-    for (var turn = 0; turn < playerTurns.length; turn++){
-        for (var combo = 0; combo < winCombos.length; combo++) {
-            console.log("Moving onto next combo...");
-            //for (var win = 0; win < winCombos[combo].length; win++) {
-                if (playerTurns[turn] === winCombos[combo]) {
-                    // player’s move exists in winning combo
-                    track += 1;
-                    console.log("Winning moves so far: " + track);
-                    if (track === 3) {
-                        console.log("SUCCESS GAME OVER!");
-                        break;
-                    } // game win conditional
-                } // move success conditional
-            //} // winning moves loop 
-        } // winCombos loop
-    }*/ // playerTurns loop
+}); 
