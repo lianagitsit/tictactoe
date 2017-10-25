@@ -19,8 +19,6 @@ table, td {
   }
 
   #play-again {
-    text-decoration: underline;
-    color: blue;
     visibility: hidden;
   }
 

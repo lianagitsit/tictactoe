@@ -42,7 +42,25 @@ $(document).ready(function () {
     var message = document.getElementById("message");
 
     // toggles play again button
-    var playAgain = document.getElementById("play-again");
+    var playAgainButton = document.getElementById("play-again");
+
+    // resets the game after a game win
+    function playAgain(){
+        // reset scoreboard
+        playerScore = 0;
+        compScore = 0;
+        playerScoreBoard.innerHTML = playerScore;
+        compScoreBoard.innerHTML = compScore;
+
+        // clears squares, move logs, and resets board
+        clearBoard();
+
+        // hide outcome message and play again button
+        message.innerHTML = "";
+        playAgainButton.style.visibility = "hidden";
+    }
+    
+    playAgainButton.addEventListener("click", playAgain);
 
     function clickEvent(){
         // if locked out, function does not execute
@@ -92,8 +110,6 @@ $(document).ready(function () {
             // clear the board
             setTimeout(clearBoard, 1500);
         }
-
-
     }
 
     function clearBoard() {
@@ -136,10 +152,10 @@ $(document).ready(function () {
                             // if player has won three matches, display message
                             if (playerScore === 3){
                                 message.innerHTML = "GAME OVER! YOU WIN!";
-                                playAgain.style.visibility = "visible";
+                                playAgainButton.style.visibility = "visible";
                             } 
-                            endGame();
-                            return true;
+                            //endGame();
+                            //return true;
                         } else if (whoseTurn === 0) {
                             console.log("COMPUTER WINS!");
                             compScore += 1;
@@ -147,11 +163,13 @@ $(document).ready(function () {
                             // if computer has won three matches, display message
                             if (compScore === 3){
                                 message.innerHTML = "GAME OVER! YOU LOSE!";
-                                playAgain.style.visibility = "visible";
+                                playAgainButton.style.visibility = "visible";
                             }
-                            endGame();
-                            return true;
+                            //endGame();
+                            //return true;
                         }
+                        endGame();
+                        return true;
                     }
                 } else {
                     break;
