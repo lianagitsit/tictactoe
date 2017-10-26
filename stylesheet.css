@@ -1,27 +1,118 @@
-table, td {
-    border: 1px solid black;
-  }
-  
-  #board {
-    width: 300px;
-    height: 300px;
-    margin: 20px auto;
-    table-layout: fixed;
-  }
-  
-  td, #message {
-    text-align: center;
-  }
+body {
+  background-color: dimgray;
+}
 
-  #scoreboard {
-    width: 300px;
-    margin: 20px auto;
-  }
+h1, table, td, .main, button {
+  font-family: 'Roboto Mono', monospace;
+  color: white;
+}
 
-  #play-again {
-    visibility: hidden;
-  }
+#scoreboard {
+  border-collapse: collapse;
+  border: 4px solid white;
+}
 
-  .wrapper {
-    text-align: center;
+#player-name, #player-score {
+  border-right: 4px solid white;
+  padding: 0;
+}
+
+#player-name, #comp-name {
+  padding: 5px;
+}
+
+#player-score, #comp-score {
+  font-size: 30px;
+}
+
+#board {
+  width: 400px;
+  height: 400px;
+  margin: 20px auto;
+  table-layout: fixed;
+  font-size: 40px;
+  border-collapse: collapse;
+}
+
+#board, .square {
+  border: 4px solid white;
+}
+
+.saver {
+  visibility: hidden;
+}
+
+#outcomes {
+  height: 75px;
+}
+
+#message {
+  font-size: 20px;
+}
+
+td, #message, #header {
+  text-align: center;
+}
+
+button {
+  margin: 10px;
+  background-color: dimgray;
+  border: 4px solid yellow;
+  padding: 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+}
+
+#scoreboard {
+  width: 300px;
+  margin: 20px auto;
+}
+
+#play-again {
+  visibility: hidden;
+}
+
+.wrapper {
+  text-align: center;
+}
+
+.cell {
+  width: 50%;
+}
+
+.wincolor {
+  background-color: lawngreen;
+}
+
+.player-color {
+  color: magenta;
+}
+
+.comp-color {
+  color: dodgerblue;
+}
+
+.game-over {
+  color: orange;
+  font-size: 18px;
+
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@keyframes flash {
+  0%, 50%, 100% {
+     opacity: 1;
   }
+  25%, 75% {
+     opacity: 0;
+  }
+}
+
+.flash {
+  animation-name: flash;
+}

@@ -4,39 +4,53 @@
     <title>Tic Tac Toe</title>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <script src="tictactoe.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:500,500i,700,700i" rel="stylesheet">
     <link rel="stylesheet" href="stylesheet.css" />
 </head>
 
 <body>
-    <table id="scoreboard">
-        <tr>
-            <td>Player</td>
-            <td>Computer</td>
-        </tr>
-        <tr>
-            <td id="player-score">00</td>
-            <td id="comp-score">00</td>
-        </tr>
-    </table>
-    <div id="message"></div>
-    <div class="wrapper"><button id="play-again">Play again?</button></div>
-    <table id="board">
-        <tr>
-            <td id="top-L"></td>
-            <td id="top-M"></td>
-            <td id="top-R"></td>
-        </tr>
-        <tr>
-            <td id="mid-L"></td>
-            <td id="mid-M"></td>
-            <td id="mid-R"></td>
-        </tr>
-        <tr>
-            <td id="bottom-L"></td>
-            <td id="bottom-M"></td>
-            <td id="bottom-R"></td>
-        </tr>
-    </table>
+    <div id="header">
+        <h1>Tic Tac Toe</h1>
+    </div>
+
+    <div id="scores">
+        <table id="scoreboard">
+            <tr>
+                <td class="cell" id="player-name">Player</td>
+                <td class="cell" id="comp-name">Computer</td>
+            </tr>
+            <tr>
+                <td class="cell" id="player-score"></td>
+                <td class="cell" id="comp-score"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="outcomes">
+        <div id="message">Best 2 out of 3 WINS!</div>
+        <div class="wrapper"><button id="play-again">Play again?</button></div>
+    </div>
+
+    <div id="game-board">
+        <table id="board">
+            <tr>
+                <td class="square" id="top-L"><span class="saver">.</span></td>
+                <td class="square" id="top-M"><span class="saver">.</span></td>
+                <td class="square" id="top-R"><span class="saver">.</span></td>
+            </tr>
+            <tr>
+                <td class="square" id="mid-L"><span class="saver">.</span></td>
+                <td class="square" id="mid-M"><span class="saver">.</span></td>
+                <td class="square" id="mid-R"><span class="saver">.</span></td>
+            </tr>
+            <tr>
+                <td class="square" id="bottom-L"><span class="saver">.</span></td>
+                <td class="square" id="bottom-M"><span class="saver">.</span></td>
+                <td class="square" id="bottom-R"><span class="saver">.</span></td>
+            </tr>
+        </table>
+    </div>
+
 </body>
 
 </html>

@@ -1,9 +1,10 @@
 // TODO: styling
+// TODO: let player choose X or O
 // TODO: computer strategy
 // BONUS: two players?
 
 $(document).ready(function () {
-    console.log("Document ready");
+    //console.log("Document ready");
 
     // could this be tighter with an object?
     var topL = document.getElementById("top-L");
@@ -40,6 +41,10 @@ $(document).ready(function () {
 
     // sets game end message
     var message = document.getElementById("message");
+    message.classList.add("main");
+
+    // access space-savers object
+    var savers = document.getElementsByClassName("saver");
 
     // toggles play again button
     var playAgainButton = document.getElementById("play-again");
@@ -55,11 +60,10 @@ $(document).ready(function () {
         // clears squares, move logs, and resets board
         clearBoard();
 
-        // hide outcome message and play again button
-        message.innerHTML = "";
+        // hide play again button
         playAgainButton.style.visibility = "hidden";
     }
-    
+
     playAgainButton.addEventListener("click", playAgain);
 
     function clickEvent(){
@@ -68,14 +72,14 @@ $(document).ready(function () {
             return;
         }
         whoseTurn = 1;
-        console.log("Player turn: " + whoseTurn);
+        //console.log("Player turn: " + whoseTurn);
         // use 'this' to know which element to modify. if you use squares[i] you'll get a bug, 
         // because this closure stores the reference to squares[i] and not the value itself; 
         // i disappears when the loop ends, so the ref is undefined
-        this.innerHTML = "X";
+        this.innerHTML = "<span class=\"player-color\">X<\/span>";
         //console.log("I got clicked!" + this.id);
         playerTurns.push(this.id);
-        console.log("PLayer turns so far: " + playerTurns);
+        //console.log("PLayer turns so far: " + playerTurns);
         this.removeEventListener("click", clickEvent);
 
         // lock the board from clicks after player's move
@@ -91,6 +95,7 @@ $(document).ready(function () {
         // no win, and no open spaces; game is a draw
         if (!wasThereAWin && (playerTurns.length + computerTurns.length === 9)){
             console.log("DRAW!");
+            message.innerHTML = "It's a DRAW!";
             endGame();
         }
         
@@ -113,10 +118,14 @@ $(document).ready(function () {
     }
 
     function clearBoard() {
-        // clear the squares
+        // reset the squares
         for (var i = 0; i < squares.length; i++){
-            squares[i].innerHTML = "";
+            squares[i].innerHTML = "<span class=\"saver\">.<\/span>";
+            squares[i].classList.remove("wincolor");
         }
+
+        // clear the match outcome message
+        message.innerHTML = "Best 2 out of 3 WINS!";        
 
         // clear the player and computer move logs
         playerTurns = [];
@@ -144,29 +153,30 @@ $(document).ready(function () {
                     track += 1;
                     // if this array has a winning combination, display appropriate win message
                     if (track === 3){
+                        // style this combo to highlight winning squares
+                        //console.log("Winning combo is: " + winCombos[combo]);
+                        for (var i = 0; i < winCombos[combo].length; i++){
+                            document.getElementById(winCombos[combo][i]).classList.add("wincolor");                           
+                        }
                         if (whoseTurn === 1){
-                            console.log("YOU WIN!");
+                            //console.log("YOU WIN!");
                             // display the score for the won match
                             playerScore += 1;
-                            playerScoreBoard.innerHTML = playerScore;                            
+                            playerScoreBoard.innerHTML = playerScore;                                                    
                             // if player has won three matches, display message
                             if (playerScore === 3){
-                                message.innerHTML = "GAME OVER! YOU WIN!";
+                                message.innerHTML = "<span class=\"game-over flash\">YOU WIN! GAME OVER!<\/span>";
                                 playAgainButton.style.visibility = "visible";
                             } 
-                            //endGame();
-                            //return true;
                         } else if (whoseTurn === 0) {
-                            console.log("COMPUTER WINS!");
+                            //console.log("COMPUTER WINS!");
                             compScore += 1;
                             compScoreBoard.innerHTML = compScore;                                    
                             // if computer has won three matches, display message
                             if (compScore === 3){
-                                message.innerHTML = "GAME OVER! YOU LOSE!";
+                                message.innerHTML = "<span class=\"game-over flash\">YOU LOSE! GAME OVER!<\/span>";
                                 playAgainButton.style.visibility = "visible";
                             }
-                            //endGame();
-                            //return true;
                         }
                         endGame();
                         return true;
@@ -181,7 +191,7 @@ $(document).ready(function () {
 
     function computerMove(){
         whoseTurn = 0;
-        console.log("Computer move " + whoseTurn);
+        //console.log("Computer move " + whoseTurn);
 
         // build array of open squares by checking the board against the move logs
         var openSquares = [];
@@ -193,14 +203,14 @@ $(document).ready(function () {
 
         // choose a random open square and place the O
         var move = openSquares[Math.floor(Math.random()*openSquares.length)];
-        move.innerHTML = "O";
+        move.innerHTML = "<span class=\"comp-color\">O<\/span>";
 
         // deactivate that square
         move.removeEventListener("click", clickEvent);
 
         // log the move
         computerTurns.push(move.id);
-        console.log("Computer moves so far: " + computerTurns);
+        //console.log("Computer moves so far: " + computerTurns);
 
         // unlock the board for the player
         lockout = false;
@@ -209,7 +219,7 @@ $(document).ready(function () {
     }
     
     function gamePlay(){
-        console.log("game is ready to play");
+        //console.log("game is ready to play");
         lockout = false;
         for (var i = 0; i < squares.length; i++) {
             //console.log("Loop running! i is " + i);
