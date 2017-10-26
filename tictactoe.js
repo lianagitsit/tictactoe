@@ -6,6 +6,11 @@
 $(document).ready(function () {
     //console.log("Document ready");
 
+    // var thex = document.getElementById("x");
+    // thex.innerHTML = "WELL THIS WORKED";
+    // document.getElementById("x").innerHTML = "XTOBER";
+    
+
     // could this be tighter with an object?
     var topL = document.getElementById("top-L");
     var topM = document.getElementById("top-M");
@@ -27,6 +32,8 @@ $(document).ready(function () {
                     ["top-L", "mid-M", "bottom-R"], ["top-R", "mid-M", "bottom-L"]];
 
     var whoseTurn;
+    var playerSymbol;
+    var compSymbol;
 
     // toggles lock from player clicks during timeout before computer move
     var lockout = false;
@@ -36,12 +43,29 @@ $(document).ready(function () {
     var compScore = 0;
     var playerScoreBoard = document.getElementById("player-score");
     var compScoreBoard = document.getElementById("comp-score");
-    playerScoreBoard.innerHTML = playerScore;
-    compScoreBoard.innerHTML = compScore;
+
 
     // sets game end message
     var message = document.getElementById("message");
-    message.classList.add("main");
+    
+
+    // allow player to choose X or O
+    function assignX() {
+        playerSymbol = "X";
+        compSymbol = "O";
+        topL.removeEventListener("click", assignX);
+        topR.removeEventListener("click", assignO);
+        clearBoard();
+    }
+
+    function assignO(){
+        playerSymbol = "O";
+        compSymbol = "X";    
+        topL.removeEventListener("click", assignX);
+        topR.removeEventListener("click", assignO);
+        clearBoard();   
+    }
+
 
     // access space-savers object
     var savers = document.getElementsByClassName("saver");
@@ -57,8 +81,11 @@ $(document).ready(function () {
         playerScoreBoard.innerHTML = playerScore;
         compScoreBoard.innerHTML = compScore;
 
-        // clears squares, move logs, and resets board
-        clearBoard();
+        // reset board and allow player symbol choice
+        document.getElementById("x").innerHTML = "X";
+        document.getElementById("o").innerHTML = "O";
+        topL.addEventListener("click", assignX);
+        topR.addEventListener("click", assignO);
 
         // hide play again button
         playAgainButton.style.visibility = "hidden";
@@ -76,7 +103,7 @@ $(document).ready(function () {
         // use 'this' to know which element to modify. if you use squares[i] you'll get a bug, 
         // because this closure stores the reference to squares[i] and not the value itself; 
         // i disappears when the loop ends, so the ref is undefined
-        this.innerHTML = "<span class=\"player-color\">X<\/span>";
+        this.innerHTML = "<span class=\"player-color\">" + playerSymbol + "<\/span>";
         //console.log("I got clicked!" + this.id);
         playerTurns.push(this.id);
         //console.log("PLayer turns so far: " + playerTurns);
@@ -124,6 +151,9 @@ $(document).ready(function () {
             squares[i].classList.remove("wincolor");
         }
 
+        //TODO: DOM travsersal to access first child or something of a saver span and adds the x and o id back
+        // TODO: set CONST of match wins
+
         // clear the match outcome message
         message.innerHTML = "Best 2 out of 3 WINS!";        
 
@@ -131,8 +161,13 @@ $(document).ready(function () {
         playerTurns = [];
         computerTurns = [];
 
-        // reset the game
-        setTimeout(gamePlay, 500);
+        // if player chose O, computer goes first
+        if (playerSymbol === "O"){
+            setTimeout(computerMove, 1000);
+            gamePlay();
+        } else {
+            setTimeout(gamePlay, 500);
+        }
     }
 
     function checkForWin(){
@@ -203,7 +238,7 @@ $(document).ready(function () {
 
         // choose a random open square and place the O
         var move = openSquares[Math.floor(Math.random()*openSquares.length)];
-        move.innerHTML = "<span class=\"comp-color\">O<\/span>";
+        move.innerHTML = "<span class=\"comp-color\">" + compSymbol + "<\/span>";
 
         // deactivate that square
         move.removeEventListener("click", clickEvent);
@@ -219,8 +254,10 @@ $(document).ready(function () {
     }
     
     function gamePlay(){
-        //console.log("game is ready to play");
+        //console.log("game is ready to play")
+
         lockout = false;
+
         for (var i = 0; i < squares.length; i++) {
             //console.log("Loop running! i is " + i);
             //console.log(squares[i]);
@@ -229,6 +266,13 @@ $(document).ready(function () {
         return true;
     }
 
-    gamePlay();
+    playerScoreBoard.innerHTML = playerScore;
+    compScoreBoard.innerHTML = compScore;
+
+    message.classList.add("main");
+
+    topL.addEventListener("click", assignX);
+    topR.addEventListener("click", assignO);
+
 
 }); 
